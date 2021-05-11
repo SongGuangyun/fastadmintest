@@ -40,7 +40,7 @@ class User extends Api
      * @param string $account  账号
      * @param string $password 密码
      */
-    public function login(UserModel $user,WxService $wxService)
+    public function login()
     {
         $data = $this->request->post();
         $rules = [
@@ -48,9 +48,7 @@ class User extends Api
             'password'=>'require'
         ];
         $this->customValidate($data,$rules);
-        $account = $data['account'];
-        $password = $data['password'];
-        $ret = $this->auth->login($account, $password);
+        $ret = $this->auth->login($data['account'], $data['password']);
         if ($ret) {
             $data = ['userinfo' => $this->auth->getUserinfo()];
             $this->success(__('Logged in successful'), $data);
@@ -59,21 +57,7 @@ class User extends Api
         }
     }
 
-    /**
-     * 自定义验证器
-     * @param  [type] $data    验证数据
-     * @param  [type] $rules   验证规则
-     * @param  array  $message 自定义验证信息
-     * @param  array  $field   [description]
-     * @return json
-     */
-    public function customValidate($data, $rules, $message = [], $field = [])
-    {
-        $validate = Validate::make($rules,$message,$field);
-        if(!$validate->check($data)){
-            $this->error($validate->getError());
-        }
-    }
+
 
     /**
      * 手机验证码登录
@@ -138,10 +122,10 @@ class User extends Api
         if ($mobile && !Validate::regex($mobile, "^1\d{10}$")) {
             $this->error(__('Mobile is incorrect'));
         }
-        $ret = Sms::check($mobile, $code, 'register');
-        if (!$ret) {
-            $this->error(__('Captcha is incorrect'));
-        }
+        // $ret = Sms::check($mobile, $code, 'register');
+        // if (!$ret) {
+        //     $this->error(__('Captcha is incorrect'));
+        // }
         $ret = $this->auth->register($username, $password, $email, $mobile, []);
         if ($ret) {
             $data = ['userinfo' => $this->auth->getUserinfo()];

@@ -29,7 +29,8 @@
         "ext-json": "*",
         "ext-curl": "*",
         "ext-pdo": "*",
-        "txthinking/mailer": "^2.0"
+        "txthinking/mailer": "^2.0",
+        "topthink/think-worker": "v1.0.1"
     },
     "config": {
         "preferred-install": "dist"

@@ -324,4 +324,20 @@ class Api
         //刷新Token
         $this->request->token();
     }
+
+    /**
+     * 自定义验证器
+     * @param  [type] $data    验证数据
+     * @param  [type] $rules   验证规则
+     * @param  array  $message 自定义验证信息
+     * @param  array  $field   [description]
+     * @return json
+     */
+    public function customValidate($data, $rules, $message = [], $field = [])
+    {
+        $validate = Validate::make($rules,$message,$field);
+        if(!$validate->check($data)){
+            $this->error($validate->getError());
+        }
+    }
 }
