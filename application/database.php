@@ -32,7 +32,7 @@ return [
     // 数据库编码默认采用 utf8mb4
     'charset'         => Env::get('database.charset', 'utf8mb4'),
     // 数据库表前缀
-    'prefix'          => Env::get('database.prefix', 'fa_'),
+    'prefix'          => Env::get('database.prefix', ''),
     // 数据库调试模式
     'debug'           => Env::get('database.debug', false),
     // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)

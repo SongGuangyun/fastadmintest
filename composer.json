@@ -30,7 +30,10 @@
         "ext-curl": "*",
         "ext-pdo": "*",
         "txthinking/mailer": "^2.0",
-        "topthink/think-worker": "v1.0.1"
+        "topthink/think-worker": "v1.0.1",
+        "evan-li/think-gateway": "^0.2.1",
+        "workerman/gateway-worker": "^3.0",
+        "workerman/gatewayclient": "^3.0"
     },
     "config": {
         "preferred-install": "dist"

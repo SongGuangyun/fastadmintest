@@ -30,8 +30,9 @@ class Relationmodel extends Backend
         if ($this->request->isAjax()) {
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $list = $this->model
-                ->with("admin")
-                ->where($where)
+                ->with(['admin'=>function ($query) {
+                    $query->withField('id,username');
+                }])->where($where)
                 ->order($sort, $order)
                 ->paginate($limit);
 

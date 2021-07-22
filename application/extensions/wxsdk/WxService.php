@@ -4,6 +4,7 @@ namespace app\extensions\wxsdk;
 
 use think\Env;
 use think\Log;
+use app\support\Str;
 
 class WxService
 {
@@ -11,6 +12,8 @@ class WxService
     protected $requestHandler;
 
     protected $baseUrl = 'https://api.weixin.qq.com/sns';
+    protected $secret_key = 'DSADA';
+    protected $notify_url = '';
 
     public function __construct()
     {
@@ -82,6 +85,17 @@ class WxService
     public function getCacheAccessToken()
     {
         return $this->requestHandler->getCacheAccessToken();
+    }
+
+    public function unify(array $params)
+    {
+        if (empty($params['spbill_create_ip'])) {
+            $params['spbill_create_ip'] = ('NATIVE' === $params['trade_type']) ? Str::get_server_ip() : Str::get_client_ip();
+        }
+        $params['appid'] = $this->wx_appid;
+        $params['notify_url'] = $params['notify_url'] ?? $this->notify_url;
+        $params['sign'] = Str::generate_sign($params, $this->secret_key);
+        return $this->requestHandler->request($this->baseUrl . 'pay/unifiedorder', $params);
     }
 
 }

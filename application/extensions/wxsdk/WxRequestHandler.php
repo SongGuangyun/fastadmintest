@@ -86,6 +86,7 @@ class WxRequestHandler
             }
         } catch (\Exception $exception) {
             Log::error(__CLASS__ . ' 微信接口请求失败：' . json_encode($exception->getMessage()));
+            return false;
             // throw $exception;
         }
         $result = json_decode($res->getBody()->getContents(), true);

@@ -3,15 +3,13 @@
 namespace app\api\controller;
 
 use fast\Random;
-use think\Cache;
 use think\Request;
 use think\Validate;
+use app\support\Str;
 use app\common\library\Ems;
 use app\common\library\Sms;
 use app\common\controller\Api;
 use app\extensions\wxsdk\WxService;
-use app\common\model\User as UserModel;
-use app\extensions\wxsdk\WxRequestHandler;
 
 /**
  * 会员接口
@@ -29,8 +27,23 @@ class User extends Api
     /**
      * 会员中心
      */
-    public function index()
+    public function index(WxService $wxService)
     {
+        // $bytes  =random_bytes(16);
+        // $size = 30;
+        // $qq = substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+        // dd($qq);
+        $params = [
+            'out_trade_no'=>'3216781223712',
+            'app_id'=>'wx66f2c76619818828',
+            'mch_id'=>'1575517991',
+            'total_fee'=>'200',
+            'trade_type'=>'JSAPI',
+        ];
+        dd($wxService->unify($params));
+        // dd(Str::getSign($params,$key));
+        // dd(Str::getSign($params,$key));
+        $ss = db('user')->find(1);
         $this->success('', ['welcome' => $this->auth->nickname]);
     }
 
@@ -42,12 +55,13 @@ class User extends Api
      */
     public function login()
     {
+
         $data = $this->request->post();
         $rules = [
-            'account'=>'require|max:20',
-            'password'=>'require'
+            'account' => 'require|max:20',
+            'password' => 'require',
         ];
-        $this->customValidate($data,$rules);
+        $this->customValidate($data, $rules);
         $ret = $this->auth->login($data['account'], $data['password']);
         if ($ret) {
             $data = ['userinfo' => $this->auth->getUserinfo()];
@@ -56,8 +70,6 @@ class User extends Api
             $this->error($this->auth->getError());
         }
     }
-
-
 
     /**
      * 手机验证码登录
@@ -269,8 +281,8 @@ class User extends Api
             $loginret = \addons\third\library\Service::connect($platform, $result);
             if ($loginret) {
                 $data = [
-                    'userinfo'  => $this->auth->getUserinfo(),
-                    'thirdinfo' => $result
+                    'userinfo' => $this->auth->getUserinfo(),
+                    'thirdinfo' => $result,
                 ];
                 $this->success(__('Logged in successful'), $data);
             }
