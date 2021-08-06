@@ -101,7 +101,7 @@ class Demo extends Api
 
     public function specFormat($sku)
     {
-        $skus = collection($sku)->toArray();
+        dd($skus);
         $specItemKeys = array_column($skus, 'specItemIds');
         $specItemIds = array_unique(explode(':', implode(':', $specItemKeys)));
         $specItems = db('goods_spec_items')->whereIn('id', $specItemIds)->select();
@@ -129,7 +129,7 @@ class Demo extends Api
     {
         $goods = GoodsSku::where('goods_id', 23)->select();
         foreach ($goods as $sku) {
-            $sku['skus'] = $this->formatSpecAndItem($sku->specItemIds, $sku->specItems);
+            $sku['skus'] = $this->formatSpecAndItem($sku->combine_ids, $sku->combine_values);
         }
         $this->success('ok', $goods);
         // // $specList = $this->specFormat($skus);
@@ -217,11 +217,11 @@ class Demo extends Api
         // dd($types);
     }
 
-    public function formatSpecAndItem($specItemIds, $specItemDisplay)
+    public function formatSpecAndItem($combineIds, $combineValues)
     {
         $result = [];
-        $array = explode('_', $specItemIds);
-        $items = explode('_', $specItemDisplay);
+        $array = explode('_', $combineIds);
+        $items = explode('_', $combineValues);
         foreach ($array as $key => $value) {
             $id = explode('-', $value);
             $item = explode('-', $items[$key]);
